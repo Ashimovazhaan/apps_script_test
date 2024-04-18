@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    
+    .button {
+      background-color: #FFD3E0; 
+      border: none;
+      color: #333333; 
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      margin: 4px 2px;
+      transition-duration: 0.4s;
+      cursor: pointer;
+      border-radius: 10px; 
+    }
+
+    .button.green {
+      background-color: #A3DD9D; 
+      color: #FFFFFF; 
+    }
+
+    .button.red {
+      background-color: #F1A695; 
+      color: #FFFFFF;
+    }
+  </style>
+</head>
+<body>
+  <h2>Расчет знака зодиака и его характеристики</h2>
+  <form id="zodiacForm">
+    <label for="birthDay">День рождения:</label>
+    <input type="number" id="birthDay" name="birthDay" min="1" max="31" required><br><br>
+    <label for="birthMonth">Месяц рождения:</label>
+    <input type="number" id="birthMonth" name="birthMonth" min="1" max="12" required><br><br>
+    <label for="birthYear">Год рождения:</label>
+    <input type="number" id="birthYear" name="birthYear" min="1900" max="2100" required><br><br>
+    <!-- Используем классы для пастельных кнопок -->
+    <input type="button" class="button green" value="Рассчитать" onclick="calculateZodiac()">
+    <input type="button" class="button red" value="Сбросить" onclick="resetForm()">
+  </form>
+
+  <div id="result"></div>
+
+  <script>
+    function calculateZodiac() {
+      var day = document.getElementById('birthDay').value;
+      var month = document.getElementById('birthMonth').value;
+      var year = document.getElementById('birthYear').value;
+      var birthDate = year + "-" + month + "-" + day;
+      google.script.run.withSuccessHandler(updateResult).calculateZodiacSign(birthDate);
+    }
+
+    function updateResult(data) {
+      var resultDiv = document.getElementById('result');
+      if (data && data.sign) {
+        resultDiv.innerHTML = '<h3>Ваш знак зодиака: ' + data.sign + '</h3>';
+        resultDiv.innerHTML += '<p>Характеристика: ' + data.characteristics + '</p>';
+      } else {
+        resultDiv.innerHTML = '<p>Ошибка при расчете знака зодиака.</p>';
+      }
+    }
+
+    function resetForm() {
+      document.getElementById('zodiacForm').reset();
+      document.getElementById('result').innerHTML = ''; // Очищаем результат
+    }
+  </script>
+</body>
+</html>
